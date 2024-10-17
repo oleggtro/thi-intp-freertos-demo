@@ -1,0 +1,10 @@
+10:27:02 **** Incremental Build of configuration Debug for project INTP_CPP ****
+make -j9 all 
+arm-none-eabi-size  INTP_CPP.elf 
+   text	   data	    bss	    dec	    hex	filename
+  49956	    128	  23016	  73100	  11d8c	INTP_CPP.elf
+Finished building: default.size.stdout
+ 
+
+10:27:02 Build Finished. 0 errors, 0 warnings. (took 171ms)
+
