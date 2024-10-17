@@ -81,6 +81,11 @@ osMessageQueueId_t myQueue02Handle;
 const osMessageQueueAttr_t myQueue02_attributes = {
   .name = "myQueue02"
 };
+/* Definitions for myTimer01 */
+osTimerId_t myTimer01Handle;
+const osTimerAttr_t myTimer01_attributes = {
+  .name = "myTimer01"
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -95,6 +100,7 @@ static void MX_TIM7_Init(void);
 void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
 void StartTask03(void *argument);
+void Callback01(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -140,6 +146,7 @@ int main(void)
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -153,8 +160,13 @@ int main(void)
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
+  /* Create the timer(s) */
+  /* creation of myTimer01 */
+  myTimer01Handle = osTimerNew(Callback01, osTimerPeriodic, NULL, &myTimer01_attributes);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
+  osTimerStart(myTimer01Handle, pdMS_TO_TICKS(100));
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the queue(s) */
@@ -504,9 +516,17 @@ void StartDefaultTask(void *argument)
   MX_USB_HOST_Init();
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
+  int counter = 0;
   for(;;)
   {
-    osDelay(1);
+	 /* if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) {
+		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+	  } else {
+		  if (counter > 2) {
+			  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+		  }
+	  }*/
+    osDelay(200);
   }
   /* USER CODE END 5 */
 }
@@ -520,9 +540,10 @@ void StartDefaultTask(void *argument)
 /* USER CODE END Header_StartTask02 */
 void StartTask02(void *argument)
 {
-	int counter = 0;
   /* USER CODE BEGIN StartTask02 */
   /* Infinite loop */
+
+	int counter = 0;
   for(;;)
   {
 	int buf = 0;
@@ -551,6 +572,18 @@ void StartTask03(void *argument)
     osDelay(1);
   }
   /* USER CODE END StartTask03 */
+}
+
+/* Callback01 function */
+void Callback01(void *argument)
+{
+  /* USER CODE BEGIN Callback01 */
+
+	if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) {
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+		  }
+  /* USER CODE END Callback01 */
 }
 
 /**
