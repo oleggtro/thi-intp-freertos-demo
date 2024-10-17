@@ -383,9 +383,9 @@ static void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 83;
+  htim7.Init.Prescaler = 8399;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 999;
+  htim7.Init.Period = 2000;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {
@@ -398,7 +398,7 @@ static void MX_TIM7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM7_Init 2 */
-
+  HAL_TIM_Base_Start_IT(&htim7);
   /* USER CODE END TIM7_Init 2 */
 
 }
@@ -519,7 +519,7 @@ void StartDefaultTask(void *argument)
   int counter = 0;
   for(;;)
   {
-	 /* if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) {
+	  /*if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) {
 		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
 	  } else {
 		  if (counter > 2) {
@@ -581,9 +581,34 @@ void Callback01(void *argument)
 
 	if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) {
 		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
 		  }
   /* USER CODE END Callback01 */
+}
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM6 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM6) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  if (htim->Instance == TIM7){
+	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+
+  }
+
+  /* USER CODE END Callback 1 */
 }
 
 /**
